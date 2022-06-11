@@ -68,7 +68,7 @@ func TestAESCTREncrypt(t *testing.T) {
 		return
 	}
 	fmt.Println("密文 ==> ", ciphertext)
-	plaintext2, err := AESCTREncrypt(ciphertext, key)
+	plaintext2, err := AESCTRDecrypt(ciphertext, key)
 	if err != nil {
 		t.Error(err)
 		return
