@@ -140,11 +140,11 @@ func AESCFBEncrypt(plaintext, key string) (string, error) {
 	stream := cipher.NewCFBEncrypter(block, iv)
 	stream.XORKeyStream(encrypted[aes.BlockSize:], data)
 
-	return hex.EncodeToString(encrypted), nil
+	return base64.StdEncoding.EncodeToString(encrypted), nil
 }
 
 func AESCFBDecrypt(ciphertext, key string) (string, error) {
-	encrypted, err := hex.DecodeString(ciphertext)
+	encrypted, err := base64.StdEncoding.DecodeString(ciphertext)
 	if err != nil {
 		return "", err
 	}
