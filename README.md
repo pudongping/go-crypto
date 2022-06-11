@@ -360,6 +360,15 @@ func main() {
 
 ```go
 
+package main
+
+import (
+	"fmt"
+
+	"github.com/pudongping/go-crypto"
+)
+
+func main() {
 	var privateKey = []byte(`
 -----BEGIN RSA PRIVATE KEY-----
 MIICXQIBAAKBgQC8haHPNLshJPplmf5jOh6fVgtLnRNOJh4qhOZY0YgwuIRQ+lOv
@@ -377,7 +386,7 @@ vvDSTcQFAYK9d4dNJjkCQQCxM1bTNieIiHuywQtNVD4EYGbu8T+holpSLpUiRQFA
 cYgvv3oqJmElg6TNoM3n3K7rsmiAO24exPEkXQz0oMRM
 -----END RSA PRIVATE KEY-----
 `)
-	
+
 	var publicKey = []byte(`
 -----BEGIN PUBLIC KEY-----
 MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC8haHPNLshJPplmf5jOh6fVgtL
@@ -389,17 +398,19 @@ x/7cMWOzPIyIoJYenqUuaZ2mJR0OLkSMPnncGMjaVfgKB07cl6q6l2xsR6e/WIwu
 
 	plaintext := "hello world"
 	fmt.Println("原文 ==> ", plaintext)
-	ciphertext, err := RSAEncrypt(publicKey, []byte(plaintext))
+	ciphertext, err := go_crypto.RSAEncrypt(publicKey, []byte(plaintext))
 	if err != nil {
-        fmt.Println(err)
-        return
+		fmt.Println(err)
+		return
 	}
 
-	plaintext1, err := RSADecrypt(privateKey, ciphertext)
+	plaintext1, err := go_crypto.RSADecrypt(privateKey, ciphertext)
 	fmt.Println("解密 ==> ", string(plaintext1))
 	if err != nil {
-        fmt.Println(err)
-        return
+		fmt.Println(err)
+		return
 	}
+
+}
 
 ```
