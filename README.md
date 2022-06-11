@@ -8,15 +8,23 @@ a encrypt and decrypt tools for golang
 go get -u github.com/pudongping/go-crypto
 ```
 
+## 测试
+
+```shell
+go test ./ -v -count=1  
+```
+
 ## 特性
 
-### 实现了 `AES` 加密算法
+### 1. 实现了 `AES` 加解密方法
 
-1. 电码本模式 （Electronic Codebook Book (ECB)）
-2. 密码分组链接模式（Cipher Block Chaining (CBC)）
-3. 计算器模式 （Counter (CTR)）
-4. 密码反馈模式 （Cipher FeedBack (CFB)）
-5. 输出反馈模式（Output FeedBack (OFB)）
+- 电码本模式 （Electronic Codebook Book (ECB)）
+- 密码分组链接模式（Cipher Block Chaining (CBC)）
+- 计算器模式 （Counter (CTR)）
+- 密码反馈模式 （Cipher FeedBack (CFB)）
+- 输出反馈模式（Output FeedBack (OFB)）
+
+### 2. 实现了 `RSA` 加解密方法
 
 ## AES
 
@@ -346,3 +354,52 @@ func main() {
 
 ```
 
+## RSA
+
+- rsa 加解密
+
+```go
+
+	var privateKey = []byte(`
+-----BEGIN RSA PRIVATE KEY-----
+MIICXQIBAAKBgQC8haHPNLshJPplmf5jOh6fVgtLnRNOJh4qhOZY0YgwuIRQ+lOv
+5f+kypKaU9YuGWQk5zb/6wVtxKZ3lApzqqpQqndtx/7cMWOzPIyIoJYenqUuaZ2m
+JR0OLkSMPnncGMjaVfgKB07cl6q6l2xsR6e/WIwu+wxya6bBWqpd2K4/iQIDAQAB
+AoGAOJaEM4ZIhXJsFwNacL6JYpqZWWEU4mhetbSe0BpVHwrD7Oq3JB2N1xFXYCu6
+JqxIeytMPxV007Yrock2OfIInRmF8UK6H0bh/o+miAXHU2ILTWdOpdBM7KXIdj8k
+8uxy8Dyp7PFfxDJZugx0Xq+VBhx+dPQV9eVAUoVX417ZVAECQQDyh8nKL4Knbaal
+Js/hEgxiN24G78Y/9z/eiwGAzB8pCq4jPFjRxpWVXwUTUvphuXyNDKv7fKhhb0KP
+uAeh6F0RAkEAxv34nzyIRSEu0kF/HuMAhRzeBaiaQs8FJAmMTsNC54vT65mGK3oL
+2TNKacfjUuIBmpy/PkztL7f3e8su4Lga+QJAQFMvfAaZ2ppEhq0CmalVy370Gbbi
+l/iV4gpwPZ7l7Na+VO4eiJTo+5MWH4f0jJLLrAVeX/cyGZWOy9t9er3MYQJBAK3N
+e47RVxBSKEv6auZ2TKj3CrCUj4/Us1/Deyn7//6vMXyxDfABXEHsO41iyhlFTzNU
+vvDSTcQFAYK9d4dNJjkCQQCxM1bTNieIiHuywQtNVD4EYGbu8T+holpSLpUiRQFA
+cYgvv3oqJmElg6TNoM3n3K7rsmiAO24exPEkXQz0oMRM
+-----END RSA PRIVATE KEY-----
+`)
+	
+	var publicKey = []byte(`
+-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC8haHPNLshJPplmf5jOh6fVgtL
+nRNOJh4qhOZY0YgwuIRQ+lOv5f+kypKaU9YuGWQk5zb/6wVtxKZ3lApzqqpQqndt
+x/7cMWOzPIyIoJYenqUuaZ2mJR0OLkSMPnncGMjaVfgKB07cl6q6l2xsR6e/WIwu
++wxya6bBWqpd2K4/iQIDAQAB
+-----END PUBLIC KEY-----
+`)
+
+	plaintext := "hello world"
+	fmt.Println("原文 ==> ", plaintext)
+	ciphertext, err := RSAEncrypt(publicKey, []byte(plaintext))
+	if err != nil {
+        fmt.Println(err)
+        return
+	}
+
+	plaintext1, err := RSADecrypt(privateKey, ciphertext)
+	fmt.Println("解密 ==> ", string(plaintext1))
+	if err != nil {
+        fmt.Println(err)
+        return
+	}
+
+```
