@@ -5,7 +5,7 @@ a encrypt and decrypt tools for golang
 ## 安装
 
 ```go
-go get github.com/pudongping/go-crypto
+go get -u github.com/pudongping/go-crypto
 ```
 
 ## 特性
@@ -24,7 +24,7 @@ go get github.com/pudongping/go-crypto
 
 - go 加密，php 解密（AES-128-CBC）
 
-加密
+go 加密
 
 ```go
 import "github.com/pudongping/go-crypto"
@@ -34,7 +34,7 @@ func main() {
 	// 密钥字节长度必须为 16 个字节
     key := "1234567890123456"
 	
-    ciphertext, err := go-crypto.AESCBCEncrypt(plaintext, key)
+    ciphertext, err := go_crypto.AESCBCEncrypt(plaintext, key)
     if err != nil {
         fmt.Println("出错啦！", err)
     }
@@ -45,7 +45,7 @@ func main() {
 
 ```
 
-解密
+php 解密
 
 ```php
 
@@ -66,7 +66,7 @@ if (!$decrypted) {
 
 - php 加密，go 解密（AES-128-CBC）
 
-加密
+php 加密
 
 ```php
 
@@ -82,7 +82,7 @@ echo $s . PHP_EOL;
 
 ```
 
-解密
+go 解密
 
 ```go
 import "github.com/pudongping/go-crypto"
@@ -91,7 +91,7 @@ func main() {
     ciphertext := "YAZkDJYi7e9O09TRNvUf+6sFMlI8AQvZ5GVU+xJIuOc="
     key := "1234567890123456"
     
-    plaintext, err := go-crypto.AESCBCDecrypt(ciphertext, key)
+    plaintext, err := go_crypto.AESCBCDecrypt(ciphertext, key)
     if err != nil {
         fmt.Println("出错啦！", err)
     }
@@ -104,7 +104,7 @@ func main() {
 
 - go 加密，php 解密（AES-192-CBC）
 
-加密
+go 加密
 
 ```go
 import "github.com/pudongping/go-crypto"
@@ -114,7 +114,7 @@ func main() {
 	// 密钥字节长度必须为 24 个字节
     key := "123456789012345678901234"
 	
-    ciphertext, err := go-crypto.AESCBCEncrypt(plaintext, key)
+    ciphertext, err := go_crypto.AESCBCEncrypt(plaintext, key)
     if err != nil {
         fmt.Println("出错啦！", err)
     }
@@ -125,7 +125,7 @@ func main() {
 
 ```
 
-解密
+php 解密
 
 ```php
 
@@ -146,7 +146,7 @@ if (!$decrypted) {
 
 - php 加密，go 解密（AES-192-CBC）
 
-加密
+php 加密
 
 ```php
 
@@ -162,7 +162,7 @@ echo $s . PHP_EOL;
 
 ```
 
-解密
+go 解密
 
 ```go
 import "github.com/pudongping/go-crypto"
@@ -171,7 +171,7 @@ func main() {
     ciphertext := "bBqpDd0iaOh3eKKgvsAWw+OnH5v8fBvb/8n+hE9YfbY="
     key := "123456789012345678901234"
     
-    plaintext, err := go-crypto.AESCBCDecrypt(ciphertext, key)
+    plaintext, err := go_crypto.AESCBCDecrypt(ciphertext, key)
     if err != nil {
         fmt.Println("出错啦！", err)
     }
@@ -184,7 +184,7 @@ func main() {
 
 - go 加密，php 解密（AES-256-CBC）
 
-加密
+go 加密
 
 ```go
 import "github.com/pudongping/go-crypto"
@@ -194,7 +194,7 @@ func main() {
 	// 密钥字节长度必须为 32 个字节
     key := "12345678901234567890123456789012"
 	
-    ciphertext, err := go-crypto.AESCBCEncrypt(plaintext, key)
+    ciphertext, err := go_crypto.AESCBCEncrypt(plaintext, key)
     if err != nil {
         fmt.Println("出错啦！", err)
     }
@@ -205,7 +205,7 @@ func main() {
 
 ```
 
-解密
+php 解密
 
 ```php
 
@@ -226,7 +226,7 @@ if (!$decrypted) {
 
 - php 加密，go 解密（AES-256-CBC）
 
-加密
+php 加密
 
 ```php
 
@@ -242,7 +242,7 @@ echo $s . PHP_EOL;
 
 ```
 
-解密
+go 解密
 
 ```go
 import "github.com/pudongping/go-crypto"
@@ -251,7 +251,7 @@ func main() {
     ciphertext := "RXqMpMoznbkuQFgU4ZXWEkmF14bIHbw2ncvmYqvN/sI="
     key := "12345678901234567890123456789012"
     
-    plaintext, err := go-crypto.AESCBCDecrypt(ciphertext, key)
+    plaintext, err := go_crypto.AESCBCDecrypt(ciphertext, key)
     if err != nil {
         fmt.Println("出错啦！", err)
     }
