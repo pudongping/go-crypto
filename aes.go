@@ -6,7 +6,6 @@ import (
 	"crypto/cipher"
 	"crypto/rand"
 	"encoding/base64"
-	"encoding/hex"
 	"errors"
 	"io"
 )
@@ -181,11 +180,11 @@ func AESOFBEncrypt(plaintext, key string) (string, error) {
 
 	stream := cipher.NewOFB(block, iv)
 	stream.XORKeyStream(crypted[aes.BlockSize:], data)
-	return hex.EncodeToString(crypted), nil
+	return base64.StdEncoding.EncodeToString(crypted), nil
 }
 
 func AESOFBDecrypt(ciphertext, key string) (string, error) {
-	encrypted, err := hex.DecodeString(ciphertext)
+	encrypted, err := base64.StdEncoding.DecodeString(ciphertext)
 	if err != nil {
 		return "", err
 	}
