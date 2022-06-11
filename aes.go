@@ -31,11 +31,11 @@ func AESECBEncrypt(plaintext, key string) (string, error) {
 		block.Encrypt(cipher[bs:be], plain[bs:be])
 	}
 
-	return hex.EncodeToString(cipher), nil
+	return base64.StdEncoding.EncodeToString(cipher), nil
 }
 
 func AESECBDecrypt(ciphertext, key string) (string, error) {
-	encrypted, err := hex.DecodeString(ciphertext)
+	encrypted, err := base64.StdEncoding.DecodeString(ciphertext)
 	if err != nil {
 		return "", err
 	}

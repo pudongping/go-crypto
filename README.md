@@ -261,3 +261,88 @@ func main() {
 }
 
 ```
+
+---
+
+### ECB 模式
+
+- go 加密，php 解密（AES-128-ECB）
+
+> `AES-192-ECB` 和 `AES-256-ECB` 加密方式与 `AES-128-ECB` 加密方式大致一样，请结合以上提供的 `AES-CBC` 相关代码来编写。
+
+go 加密
+
+```go
+import "github.com/pudongping/go-crypto"
+
+func main() {
+    plaintext := "hello world! My name is Alex Pu"
+	// 密钥字节长度必须为 16 个字节
+    key := "1234567890123456"
+	
+    ciphertext, err := go_crypto.AESECBEncrypt(plaintext, key)
+    if err != nil {
+        fmt.Println("出错啦！", err)
+    }
+	
+    // output is: sRFeHhndretZFZE9/7WdGuGw1QYl8l/IlI1XEtpVzxI=
+    fmt.Println(ciphertext)
+}
+
+```
+
+php 解密
+
+```php
+
+$key = '1234567890123456';
+$s = 'sRFeHhndretZFZE9/7WdGuGw1QYl8l/IlI1XEtpVzxI=';
+
+$str = base64_decode($s);
+$decrypted = openssl_decrypt($str, 'AES-128-ECB', $key, OPENSSL_RAW_DATA);
+if (!$decrypted) {
+    echo '解密失败' . PHP_EOL;
+} else {
+    // output is: hello world! My name is Alex Pu
+    echo($decrypted) . PHP_EOL;
+}
+
+```
+
+- php 加密，go 解密（AES-128-ECB）
+
+php 加密
+
+```php
+
+$string = 'hello world! alex';
+$key = '1234567890123456';
+
+$encrypted = openssl_encrypt($string, 'AES-128-ECB', $key, OPENSSL_RAW_DATA);
+$s = base64_encode($encrypted);
+
+// output is: 7LVm2y6R7E+Hj3mIRlHDbOWZPsz+Vvb2zOkt6htAttc=
+echo $s . PHP_EOL;
+
+```
+
+go 解密
+
+```go
+import "github.com/pudongping/go-crypto"
+
+func main() {
+    ciphertext := "7LVm2y6R7E+Hj3mIRlHDbOWZPsz+Vvb2zOkt6htAttc="
+    key := "1234567890123456"
+    
+    plaintext, err := go_crypto.AESECBDecrypt(ciphertext, key)
+    if err != nil {
+        fmt.Println("出错啦！", err)
+    }
+	
+	// output is: 解密 ==>  hello world! alex
+    fmt.Println("解密 ==> ", plaintext)
+}
+
+```
+
