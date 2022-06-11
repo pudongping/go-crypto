@@ -223,14 +223,3 @@ func PKCS7UnPadding(origData []byte) []byte {
 	unpadding := int(origData[length-1])
 	return origData[:(length - unpadding)]
 }
-
-func generateKey(key []byte, length int) []byte {
-	genKey := make([]byte, length)
-	copy(genKey, key)
-	for i := 16; i < len(key); {
-		for j := 0; j < 16 && i < len(key); j, i = j+1, i+1 {
-			genKey[j] ^= key[i]
-		}
-	}
-	return genKey
-}
