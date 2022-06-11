@@ -17,7 +17,6 @@ func TestAESCBCEncrypt(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	ciphertext = "RXqMpMoznbkuQFgU4ZXWEkmF14bIHbw2ncvmYqvN/sI="
 	fmt.Println("密文 ==> ", ciphertext)
 	plaintext2, err := AESCBCDecrypt(ciphertext, key)
 	if err != nil {

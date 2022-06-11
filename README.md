@@ -4,7 +4,7 @@ a encrypt and decrypt tools for golang
 
 ## 安装
 
-```go
+```shell
 go get -u github.com/pudongping/go-crypto
 ```
 
