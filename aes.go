@@ -60,6 +60,9 @@ func AESECBDecrypt(ciphertext, key string) (string, error) {
 func AESCBCEncrypt(plaintext, key string) (string, error) {
 	data := []byte(plaintext)
 	k := []byte(key)
+	if len(k) > 16 {
+		k = k[:16]
+	}
 	// 分组密钥
 	block, err := aes.NewCipher(k)
 	if err != nil {

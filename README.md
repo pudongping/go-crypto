@@ -30,6 +30,8 @@ go test ./ -v -count=1
 
 ### CBC 模式
 
+> 推荐使用 CBC 分组模式
+
 - go 加密，php 解密（AES-128-CBC）
 
 go 加密
