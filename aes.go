@@ -60,9 +60,6 @@ func AESECBDecrypt(ciphertext, key string) (string, error) {
 func AESCBCEncrypt(plaintext, key string) (string, error) {
 	data := []byte(plaintext)
 	k := []byte(key)
-	if len(k) > 16 {
-		k = k[:16]
-	}
 	// 分组密钥
 	block, err := aes.NewCipher(k)
 	if err != nil {
@@ -88,7 +85,10 @@ func AESCBCDecrypt(ciphertext, key string) (string, error) {
 	}
 	k := []byte(key)
 	// 分组密钥
-	block, _ := aes.NewCipher(k)
+	block, err := aes.NewCipher(k)
+	if err != nil {
+		return "", err
+	}
 	// 获取密钥块的长度
 	blockSize := block.BlockSize()
 	// 加密模式
