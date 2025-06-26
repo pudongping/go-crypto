@@ -129,3 +129,29 @@ func TestAESOFBEncrypt(t *testing.T) {
 		t.Error("TestOFBEncrypt failed")
 	}
 }
+
+func TestAESGCMEncrypt(t *testing.T) {
+	plaintext := "hello world! My name is Alex Pu"
+	// key 支持三种密钥长度
+	// key := "1234567890123456" // 16字节密钥 (AES-128-GCM)
+	// key := "123456789012345678901234" // 24字节密钥 (AES-192-GCM)
+	key := "12345678901234567890123456789012" // 32字节密钥 (AES-256-GCM)
+	fmt.Println("原文 ==> ", plaintext)
+	ciphertext, err := AESGCMEncrypt(plaintext, key)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	fmt.Println("密文 ==> ", ciphertext)
+
+	plaintext2, err := AESGCMDecrypt(ciphertext, key)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	fmt.Println("解密 ==> ", plaintext2)
+
+	if plaintext != plaintext2 {
+		t.Error("TestAESGCMEncrypt failed")
+	}
+}

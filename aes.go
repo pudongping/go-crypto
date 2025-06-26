@@ -226,3 +226,60 @@ func PKCS7UnPadding(origData []byte) []byte {
 	unpadding := int(origData[length-1])
 	return origData[:(length - unpadding)]
 }
+
+// AESGCMEncrypt 使用 AES GCM 模式加密数据
+func AESGCMEncrypt(plaintext, key string) (string, error) {
+	// 确保密钥长度为 16、24 或 32 字节
+	block, err := aes.NewCipher([]byte(key))
+	if err != nil {
+		return "", err
+	}
+
+	// 创建 GCM 模式
+	gcm, err := cipher.NewGCM(block)
+	if err != nil {
+		return "", err
+	}
+
+	// 生成随机的 nonce
+	nonce := make([]byte, gcm.NonceSize())
+	if _, err = io.ReadFull(rand.Reader, nonce); err != nil {
+		return "", err
+	}
+
+	ciphertext := gcm.Seal(nil, nonce, []byte(plaintext), nil)
+	// 将 nonce 和密文连接起来
+	cipherData := append(nonce, ciphertext...)
+	return base64.StdEncoding.EncodeToString(cipherData), nil
+}
+
+// AESGCMDecrypt 使用 AES GCM 模式解密数据
+func AESGCMDecrypt(ciphertext, key string) (string, error) {
+	data, err := base64.StdEncoding.DecodeString(ciphertext)
+	if err != nil {
+		return "", err
+	}
+
+	block, err := aes.NewCipher([]byte(key))
+	if err != nil {
+		return "", err
+	}
+
+	gcm, err := cipher.NewGCM(block)
+	if err != nil {
+		return "", err
+	}
+
+	nonceSize := gcm.NonceSize()
+	if len(data) < nonceSize {
+		return "", errors.New("ciphertext too short")
+	}
+
+	nonce, ciphertextData := data[:nonceSize], data[nonceSize:]
+	plaintext, err := gcm.Open(nil, nonce, ciphertextData, nil)
+	if err != nil {
+		return "", err
+	}
+
+	return string(plaintext), nil
+}

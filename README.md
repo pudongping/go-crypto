@@ -18,21 +18,167 @@ go test ./ -v -count=1
 
 ### 1. 实现了 `AES` 加解密方法
 
+> 推荐使用 `AES-GCM` 模式进行加解密。
+
 - 电码本模式 （Electronic Codebook Book (ECB)）
 - 密码分组链接模式（Cipher Block Chaining (CBC)）
 - 计算器模式 （Counter (CTR)）
 - 密码反馈模式 （Cipher FeedBack (CFB)）
 - 输出反馈模式（Output FeedBack (OFB)）
+- 伽罗瓦计数器模式（Galois/Counter Mode (GCM)）
 
 ### 2. 实现了 `RSA` 加解密方法
 
 ## AES
 
+### GCM 模式
+
+<details>
+<summary>AES GCM 模式 Go、PHP 加解密示例 </summary>
+
+go 加解密
+
+```go
+import "github.com/pudongping/go-crypto"
+
+func main() {
+	plaintext := "hello world! My name is Alex Pu"
+	
+    // key 支持三种密钥长度
+    // key := "1234567890123456" // 16字节密钥 (AES-128-GCM)
+    // key := "123456789012345678901234" // 24字节密钥 (AES-192-GCM)
+    key := "12345678901234567890123456789012" // 32字节密钥 (AES-256-GCM)
+	// 原文 ==>  hello world! My name is Alex Pu
+    fmt.Println("原文 ==> ", plaintext)
+    ciphertext, err := go_crypto.AESGCMEncrypt(plaintext, key)
+    if err != nil {
+        fmt.Println("出错啦！", err)
+        return
+    }
+	// 密文 ==>  uvAupkvGwV/bHSIFL4rKtZe8gzHppM486pfcmwNSSBL0ZKkHwfjSD1QlpJe2bBPi/shdfzVSRf2Ke6s=
+    fmt.Println("密文 ==> ", ciphertext)
+    
+    plaintext2, err := go_crypto.AESGCMDecrypt(ciphertext, key)
+    if err != nil {
+        fmt.Println("出错啦！", err)
+        return
+    }
+	// 解密 ==>  hello world! My name is Alex Pu
+    fmt.Println("解密 ==> ", plaintext2)	
+}
+```
+
+php 加解密
+
+```php
+<?php
+
+/**
+ * AES-GCM 加密函数
+ *
+ * @param string $plaintext 明文字符串
+ * @param string $key 密钥（16、24、32字节）
+ * @param string $algo 加密算法名称，如 aes-128-gcm、aes-256-gcm
+ * @return string           Base64 编码的 nonce + ciphertext + tag
+ */
+function aes_gcm_encrypt(string $plaintext, string $key, string $algo = 'aes-256-gcm'): string
+{
+    $ivLength = openssl_cipher_iv_length($algo);
+    $iv = random_bytes($ivLength); // nonce
+
+    $tag = '';
+    $ciphertext = openssl_encrypt(
+        $plaintext,
+        $algo,
+        $key,
+        OPENSSL_RAW_DATA,
+        $iv,
+        $tag,
+        '',      // AAD（可选）
+        16       // Tag 长度
+    );
+
+    if ($ciphertext === false) {
+        throw new RuntimeException('加密失败');
+    }
+
+    // 输出格式：Base64(nonce + ciphertext + tag)
+    return base64_encode($iv . $ciphertext . $tag);
+}
+
+/**
+ * AES-GCM 解密函数
+ *
+ * @param string $cipherBase64 Base64 编码的 nonce + ciphertext + tag
+ * @param string $key 密钥（16、24、32字节）
+ * @param string $algo 加密算法名称，如 aes-128-gcm、aes-256-gcm
+ * @return string              明文
+ */
+function aes_gcm_decrypt(string $cipherBase64, string $key, string $algo = 'aes-256-gcm'): string
+{
+    $cipherData = base64_decode($cipherBase64);
+    $ivLength = openssl_cipher_iv_length($algo);
+
+    if ($ivLength === false || strlen($cipherData) < ($ivLength + 16)) {
+        throw new InvalidArgumentException('密文格式错误');
+    }
+
+    $iv = substr($cipherData, 0, $ivLength);
+    $tag = substr($cipherData, -16);
+    $ciphertext = substr($cipherData, $ivLength, -16);
+
+    $plaintext = openssl_decrypt(
+        $ciphertext,
+        $algo,
+        $key,
+        OPENSSL_RAW_DATA,
+        $iv,
+        $tag,
+        '' // AAD（可选）
+    );
+
+    if ($plaintext === false) {
+        throw new RuntimeException('解密失败');
+    }
+
+    return $plaintext;
+}
+
+
+$text = "hello world! My name is Alex Pu";
+
+// $key = '1234567890123456';
+// $algo = 'AES-128-GCM';
+// $s = 'YEfwbkvJwUtwcSlqRhKf5xrVzzn9r3ZWj8JU8LKZUouzgcvCKvJMxgx36g5hKGQZUBcKWZxAoXipVHs=';
+
+// $key = '123456789012345678901234';
+// $algo = 'AES-192-GCM';
+// $s = 'An0/iQf0BOR+g2qN31XAqcjV5Esp5HjkTO6Zy9pAMZ+rbIh0VPANqr1dP8S9t0bM51hByqqI3vkqLAc=';
+
+$key = '12345678901234567890123456789012';
+$algo = 'AES-256-GCM';
+$s = 'SVpsIZ0LOGCN4XBaeALpxtXGecut+xPoAJHpcHBTXCRewkVvFCslxn1+T85tSAsD078O+SlpcxGQJ44=';
+
+$a = aes_gcm_decrypt($s, $key, $algo);
+
+// string(31) "hello world! My name is Alex Pu"
+var_dump($a);
+
+$aa = aes_gcm_encrypt($text, $key, $algo);
+$bb = aes_gcm_decrypt($aa, $key, $algo);
+var_dump($bb);
+```
+
+
+</details>
+
+---
+
 ### CBC 模式
 
-> 推荐使用 CBC 分组模式
 
-- go 加密，php 解密（AES-128-CBC）
+<details>
+<summary>go 加密，php 解密（AES-128-CBC） </summary>
 
 go 加密
 
@@ -74,7 +220,12 @@ if (!$decrypted) {
 
 ```
 
-- php 加密，go 解密（AES-128-CBC）
+</details>
+
+---
+
+<details>
+<summary>php 加密，go 解密（AES-128-CBC） </summary>
 
 php 加密
 
@@ -112,7 +263,12 @@ func main() {
 
 ```
 
-- go 加密，php 解密（AES-192-CBC）
+</details>
+
+---
+
+<details>
+<summary>go 加密，php 解密（AES-192-CBC） </summary>
 
 go 加密
 
@@ -154,7 +310,12 @@ if (!$decrypted) {
 
 ```
 
-- php 加密，go 解密（AES-192-CBC）
+</details>
+
+---
+
+<details>
+<summary>php 加密，go 解密（AES-192-CBC） </summary>
 
 php 加密
 
@@ -192,7 +353,12 @@ func main() {
 
 ```
 
-- go 加密，php 解密（AES-256-CBC）
+</details>
+
+---
+
+<details>
+<summary>go 加密，php 解密（AES-256-CBC） </summary>
 
 go 加密
 
@@ -234,7 +400,12 @@ if (!$decrypted) {
 
 ```
 
-- php 加密，go 解密（AES-256-CBC）
+</details>
+
+---
+
+<details>
+<summary>php 加密，go 解密（AES-256-CBC） </summary>
 
 php 加密
 
@@ -272,13 +443,17 @@ func main() {
 
 ```
 
+</details>
+
 ---
+
 
 ### ECB 模式
 
-- go 加密，php 解密（AES-128-ECB）
-
 > `AES-192-ECB` 和 `AES-256-ECB` 加密方式与 `AES-128-ECB` 加密方式大致一样，请结合以上提供的 `AES-CBC` 相关代码来编写。
+
+<details>
+<summary>go 加密，php 解密（AES-128-ECB） </summary>
 
 go 加密
 
@@ -319,7 +494,12 @@ if (!$decrypted) {
 
 ```
 
-- php 加密，go 解密（AES-128-ECB）
+</details>
+
+---
+
+<details>
+<summary>php 加密，go 解密（AES-128-ECB） </summary>
 
 php 加密
 
@@ -356,9 +536,14 @@ func main() {
 
 ```
 
+</details>
+
+---
+
 ## RSA
 
-- rsa 加解密
+<details>
+<summary>rsa 加解密 </summary>
 
 ```go
 
@@ -416,3 +601,7 @@ x/7cMWOzPIyIoJYenqUuaZ2mJR0OLkSMPnncGMjaVfgKB07cl6q6l2xsR6e/WIwu
 }
 
 ```
+
+</details>
+
+---
